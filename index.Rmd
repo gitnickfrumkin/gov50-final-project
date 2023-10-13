@@ -11,4 +11,15 @@ output:
 
 ## Project thoughts
 
-I am interested in exploring data related to historical trends in voter supression. Might try to do it with a state-wide or national-wide scope.  
+```{r}
+library(tidyverse)
+spending_data <- read_csv("spending_data.csv")
+view(spending_data)
+```
+
+My research question is: How does US military spending effect other economic factors such as employment, gdp per capita, etc? My hypothesis is that there will be correlations between the military spending and these economic statistics but I do not know in what way they will be correlated. The reason I believe that military spending and these other economic factors will be related based on my understanding of how military spending increases national debt, can potentialy factor into increased inflation and all of this becomes related to the American individual at some point. Additionally, I think military spending corresponds to the flow of jobs from the private to public sectors and vice versa. All of this likely will effect a wide range of economic factors I hope to expolore. Some of these factors are: interest rates, housing shortages, unemployment, and countless more areas. All of these variables are very accurately recorded by the government. My data set covers over 50 years of data. A pattern I am interested to potentially observe is an inverse relationship between spending and unemployment. This would support my thesis that these factors are connected if inverse or positive. Specifically, I think military spending will posatively affect employment rates. I am very excited to get to work with this data set and may consider joining other data sets for more data points but have a lot to work off with this file alone. 
+
+
+
+
+
