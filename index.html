@@ -115,7 +115,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js","spending_data.csv"]}
+  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-2-1.png","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js","spending_data.csv"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1522,11 +1522,40 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span>
 <span><span class='va'>spending_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_csv</a></span><span class='op'>(</span><span class='st'>"spending_data.csv"</span><span class='op'>)</span></span>
-<span><span class='fu'><a href='https://tibble.tidyverse.org/reference/view.html'>view</a></span><span class='op'>(</span><span class='va'>spending_data</span><span class='op'>)</span></span></code></pre>
+<span><span class='va'>spending_data</span></span></code></pre>
 </div>
+<pre><code># A tibble: 77 × 77
+    date   gdp   gnp potential_gdp real_gdp real_gnp
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+ 1  1949  272.  274.           NA     2108     2122.
+ 2  1950  300.  301.          296.    2291.    2307 
+ 3  1951  347.  349.          334.    2475.    2495.
+ 4  1952  367.  369.          360.    2577.    2596.
+ 5  1953  389.  391.          382.    2697.    2717.
+ 6  1954  391.  393.          396.    2682.    2702.
+ 7  1955  425.  428.          413.    2873.    2896.
+ 8  1956  449.  452.          438.    2934.    2959.
+ 9  1957  474.  477.          466.    2996.    3022.
+10  1958  481.  484.          494.    2974.    2996.
+# ℹ 67 more rows
+# ℹ 71 more variables: real_potential_gdp &lt;dbl&gt;, real_gdp_nfb &lt;dbl&gt;,
+#   potential_lf &lt;dbl&gt;, potential_lf_prod &lt;dbl&gt;,
+#   potential_lfpr &lt;dbl&gt;, noncyclical_rate_of_unemployment &lt;dbl&gt;,
+#   output_gap &lt;dbl&gt;, nfb_real_potential_gdp &lt;dbl&gt;,
+#   nfb_potential_hrs_worked &lt;dbl&gt;, nfb_index_capital_services &lt;dbl&gt;,
+#   nfb_potential_tfp &lt;dbl&gt;, nfb_potential_lab_prod &lt;dbl&gt;, …</code></pre>
 </div>
-<p>My central research question is: How does the US military spending effect other economic factors such as employment, gdp per capita, etc? My hypothesis is that there will be correlations between the military spending and these economic statistics but I do not know in what way they will be correlated. The reason I believe that military spending and these other economic factors will be related based on my understanding of how military spending increases national debt, can potentialy factor into increased inflation and all of this becomes related to the American individual at some point. Additionally, I think military spending corresponds to the flow of jobs from the private to public sectors and vice versa. All of this likely will effect a wide range of economic factors I hope to expolore. Some of these factors are: interest rates, housing shortages, unemployment, and countless more areas. All of these variables are very accurately recorded by the government. My data set covers over 50 years of data. A pattern I am interested to potentially observe is an inverse relationship between spending and unemployment. This would support my thesis that these factors are connected if inverse or positive. Specifically, I think military spending will posatively affect employment rates. I am very excited to get to work with this data set and may consider joining other data sets for more data points but have a lot to work off with this file alone.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<p>Milestone 3:</p>
+<p>Here is a data visualization:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>plot_GDP_vs_Income</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>spending_data</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>personal_income</span>, y <span class='op'>=</span> <span class='va'>real_gdp</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Personal Income (Thousands)"</span>, y <span class='op'>=</span> <span class='st'>"GDP of Given Year (Trillions)"</span>, title <span class='op'>=</span> <span class='st'>"How do income and GDP compare over the past 75 years in America?"</span> <span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span><span class='va'>plot_GDP_vs_Income</span></span></code></pre>
+</div>
+<p><img src="index_files/figure-html5/unnamed-chunk-2-1.png" width="624" /></p>
+</div>
+<p>My central research question is: How does the US military spending effect other economic factors such as employment, gdp per capita, etc? My hypothesis is that there will be correlations between the military spending and these economic statistics but I do not know in what way they will be correlated. The reason I believe that military spending and these other economic factors will be related based on my understanding of how military spending increases national debt, can potentialy factor into increased inflation and all of this becomes related to the American individual at some point. Additionally, I think military spending corresponds to the flow of jobs from the private to public sectors and vice versa. All of this likely will effect a wide range of economic factors I hope to explore. Some of these factors are: interest rates, housing shortages, unemployment, and countless more areas. All of these variables are very accurately recorded by the government. My data set covers over 50 years of data. A pattern I am interested to potentially observe is an inverse relationship between spending and unemployment. This would support my thesis that these factors are connected if inverse or positive. Specifically, I think military spending will positively affect employment rates. I am very excited to get to work with this data set and may consider joining other data sets for more data points but have a lot to work off with this file alone.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
