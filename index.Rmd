@@ -1,7 +1,7 @@
 ---
 title: "Gov 50 Final Project"
 author: "Nicholas Frumkin"
-description: "Nick's Final Project draft -- Milestone 4"
+description: "Nick's Final Project draft -- Milestone 4 Check"
 output:
   distill::distill_article:
     self_contained: false
