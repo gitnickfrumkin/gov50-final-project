@@ -9,37 +9,68 @@ output:
 
 
 
-## Project thoughts
+Project Thoughts
 
+I had to convert the sav file to a csv file here:
 
 ```{r}
 library(tidyverse)
-spending_data <- read_csv("spending_data.csv")
-spending_data
+library(haven)
+library(readr)
+
+division_data <- read_sav("1987-2012 Values Merge public.sav")
+getwd() 
+write_csv(x=division_data, path="division_data") |>
+   na.omit(division_data)
+
+view(division_data)
 ```
+Milestone 4: 
+
+Analysis of milestone 3: 
+
+The graph under "Milestone 3" shows that the general sentiment surrounding how the American populous views politician's level of being "in touch" with the realities of life in America. The visualizatio tracks an initial drop in median confidence level right after the removal of the Fairness Doctrine and then a surge back soon after. This somewhat confirms my hypothesis. It is interesting to see the radical decline if confidence oin politicians and the rise of animosity towards them once the news channels became more partisan. 
+
+Here is another visualization and analysis aimed to answer my research question: 
+
+```{r}
+govt_control_since_1987 <- division_data |>
+  group_by(year) |>
+  mutate(mean_problem_solving_score = mean(q2t))
+
+problem_solving_since_1987 <- ggplot(data = govt_control_since_1987, mapping = aes(x = year, y = mean_problem_solving_score)) + geom_point() + labs(x = "Year", y = "Score of Problem Solving Ability", title = "Can Americans Solve Our Own Problems?"  ) + geom_smooth()
+problem_solving_since_1987
+```
+Analysis:
+
+This graph also supports my theory that there will be a significant decline in confidence in politicians/fellow Americans once the news sources became more partisan/polarizing. There is then a spike in the early 1990's which can likely be described by other political events occurring at that time. 
+
+
+
+
+
 Milestone 3:
 
 Here is a data visualization: 
 
-
 ```{r}
-plot_GDP_vs_Income <- ggplot(data = spending_data, mapping = aes(x = personal_income, y = real_gdp)) + geom_point() + labs(x = "Personal Income (Thousands)", y = "GDP of Given Year (Trillions)", title = "How do income and GDP compare over the past 75 years in America?" ) + geom_smooth()
-plot_GDP_vs_Income
+officials_since_1987 <- division_data |>
+  group_by(year) |>
+  mutate(mean_officials_loose_touch = mean(q2b))
+
+plot_officials_since_1987 <- ggplot(data = officials_since_1987, mapping = aes(x = year, y = mean_officials_loose_touch)) + geom_point() + labs(x = "Year", y = "Rating (Higher rating = More aware of struggles", title = "Rating of Politician's Awareness of Stuggles in America"  ) + geom_smooth()
+plot_officials_since_1987
 ```
 
 
+Milestone 2: 
+I recently changed my research question. Now I will specifically be asking: How did the abandonment of the Fairness Doctrine in 1987 lead to overall division in America when it comes to trust in the government, trust in business, and equity. My hypothesis is that there will be less confidence in government and more overall anger about business and equity in the years following the removal of the Fairness Doctrine. I do think these ratings will likely vary due to political events but there likely will be a sharp change for most of these tests right after the Fairness Doctrine was removed as news channels quickly became more partisan. I will be looking at these approval ratings/confidence levels in the government to see how the views of Americans change since the news regulations changed. 
 
 
 
 
 
 
-
-
-
-
-
-My central research question is: How does the US military spending effect other economic factors such as employment, gdp per capita, etc? My hypothesis is that there will be correlations between the military spending and these economic statistics but I do not know in what way they will be correlated. The reason I believe that military spending and these other economic factors will be related based on my understanding of how military spending increases national debt, can potentialy factor into increased inflation and all of this becomes related to the American individual at some point. Additionally, I think military spending corresponds to the flow of jobs from the private to public sectors and vice versa. All of this likely will effect a wide range of economic factors I hope to explore. Some of these factors are: interest rates, housing shortages, unemployment, and countless more areas. All of these variables are very accurately recorded by the government. My data set covers over 50 years of data. A pattern I am interested to potentially observe is an inverse relationship between spending and unemployment. This would support my thesis that these factors are connected if inverse or positive. Specifically, I think military spending will positively affect employment rates. I am very excited to get to work with this data set and may consider joining other data sets for more data points but have a lot to work off with this file alone. 
 
 
 
