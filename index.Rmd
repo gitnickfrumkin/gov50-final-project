@@ -1,7 +1,7 @@
 ---
-title: "Gov 50 Final Project"
+title: "How did the abandonment of the Fairness Doctrine in 1987 lead to overall division in America when it comes to trust in the government, trust in business, and equity?"
 author: "Nicholas Frumkin"
-description: "Nick's Final Project draft -- Milestone 4 Check"
+description: "Gov 50: Final Project"
 output:
   distill::distill_article:
     self_contained: false
@@ -61,6 +61,21 @@ officials_since_1987 <- division_data |>
 plot_officials_since_1987 <- ggplot(data = officials_since_1987, mapping = aes(x = year, y = mean_officials_loose_touch)) + geom_point() + labs(x = "Year", y = "Rating (Higher rating = More aware of struggles", title = "Rating of Politician's Awareness of Stuggles in America"  ) + geom_smooth()
 plot_officials_since_1987
 ```
+```{r}
+officials_since_1987 <- division_data |>
+  group_by(year) |>
+  mutate(mean_officials_loose_touch = mean(q2b))
+
+plot_officials_since_1987 <- ggplot(data = officials_since_1987, mapping = aes(x = year, y = mean_officials_loose_touch)) + geom_point() + labs(x = "Year", y = "Rating (Higher rating = More aware of struggles", title = "Rating of Politician's Awareness of Stuggles in America"  ) + geom_smooth()
+plot_officials_since_1987
+
+
+
+```
+
+
+
+
 
 
 Milestone 2: 
