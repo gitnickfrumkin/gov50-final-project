@@ -1,5 +1,5 @@
 ---
-title: "How did the abandonment of the Fairness Doctrine in 1987 lead to overall division in America when it comes to trust in the government, trust in business, and equity?"
+title: "How Do Americans' Patriotism Relate To Trust In Business, Trust In Government Officials, and Government Efficiency?"
 author: "Nicholas Frumkin"
 description: "Gov 50: Final Project"
 output:
@@ -7,11 +7,19 @@ output:
     self_contained: false
 ---
 
+  How exactly do we derive our feelings towards the government and business? What percent of our feelings come from empirical analysis and what come from other methods? In this brief study, I aim to dig deep into the role that patriotism plays in influencing our feelings towards government, politicians, and business. Specifically, the research question I pose is:
+
+How do Americans' patriotism relate To trust in business, trust in government officials, and government efficiency?
+
+In order 
 
 
-Project Thoughts
 
-I had to convert the sav file to a csv file here:
+
+
+
+
+
 
 ```{r}
 library(tidyverse)
@@ -25,13 +33,10 @@ write_csv(x=division_data, path="division_data") |>
 
 view(division_data)
 ```
-Milestone 4: 
 
-Analysis of milestone 3: 
 
-The graph under "Milestone 3" shows that the general sentiment surrounding how the American populous views politician's level of being "in touch" with the realities of life in America. The visualizatio tracks an initial drop in median confidence level right after the removal of the Fairness Doctrine and then a surge back soon after. This somewhat confirms my hypothesis. It is interesting to see the radical decline if confidence oin politicians and the rise of animosity towards them once the news channels became more partisan. 
 
-Here is another visualization and analysis aimed to answer my research question: 
+
 
 ```{r}
 govt_control_since_1987 <- division_data |>
@@ -61,6 +66,10 @@ officials_since_1987 <- division_data |>
 plot_officials_since_1987 <- ggplot(data = officials_since_1987, mapping = aes(x = year, y = mean_officials_loose_touch)) + geom_point() + labs(x = "Year", y = "Rating (Higher rating = More aware of struggles", title = "Rating of Politician's Awareness of Stuggles in America"  ) + geom_smooth()
 plot_officials_since_1987
 ```
+
+
+
+
 ```{r}
 officials_since_1987 <- division_data |>
   group_by(year) |>
@@ -79,9 +88,7 @@ plot_officials_since_1987
 
 
 Milestone 2: 
-I recently changed my research question. Now I will specifically be asking: How did the abandonment of the Fairness Doctrine in 1987 lead to overall division in America when it comes to trust in the government, trust in business, and equity. My hypothesis is that there will be less confidence in government and more overall anger about business and equity in the years following the removal of the Fairness Doctrine. I do think these ratings will likely vary due to political events but there likely will be a sharp change for most of these tests right after the Fairness Doctrine was removed as news channels quickly became more partisan. I will be looking at these approval ratings/confidence levels in the government to see how the views of Americans change since the news regulations changed. 
-
-
+I recently changed my research question. Now I will specifically be asking: How did the abandonment of the Fairness Doctrine in 1987 lead to overall division in America when it comes to trust in the government, trust in business, and equity. My hypothesis is that there will be less confidence in government and more overall anger about business and equity in the years following the removal of the Fairness Doctrine. I do think these ratings will likely vary due to political events but there likely will be a sharp change for most of these tests right after the Fairness Doctrine was removed as news channels quickly became more partisan. I will be looking at these approval ratings/confidence levels in the government to see how the views of Americans change since the news regulations changed.
 
 
 
