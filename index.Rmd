@@ -1,5 +1,5 @@
 ---
-title: "How Do Americans' Patriotism Relate To Trust In Business, Trust In Government Officials, and Government Efficiency?"
+title: ""
 author: "Nicholas Frumkin"
 description: "Gov 50: Final Project"
 output:
@@ -7,96 +7,118 @@ output:
     self_contained: false
 ---
 
-  How exactly do we derive our feelings towards the government and business? What percent of our feelings come from empirical analysis and what come from other methods? In this brief study, I aim to dig deep into the role that patriotism plays in influencing our feelings towards government, politicians, and business. Specifically, the research question I pose is:
-
-How do Americans' patriotism relate To trust in business, trust in government officials, and government efficiency?
-
-In order 
-
-
-
-
-
-
-
-
-
+  
 ```{r}
 library(tidyverse)
-library(haven)
-library(readr)
+library("jsonlite")
 
-division_data <- read_sav("1987-2012 Values Merge public.sav")
-getwd() 
-write_csv(x=division_data, path="division_data") |>
-   na.omit(division_data)
+json_file <- 'https://datahub.io/core/co2-fossil-by-nation/datapackage.json'
+json_data <- fromJSON(paste(readLines(json_file), collapse=""))
 
-view(division_data)
+
+print(json_data$resources$name)
+
+
+for(i in 1:length(json_data$resources$datahub$type)){
+  if(json_data$resources$datahub$type[i]=='derived/csv'){
+    path_to_file = json_data$resources$path[i]
+    data1 <- read.csv(url(path_to_file))
+    
+  }
+}
+
 ```
-
-
 
 
 
 ```{r}
-govt_control_since_1987 <- division_data |>
-  group_by(year) |>
-  mutate(mean_problem_solving_score = mean(q2t))
+data1 <- data1 |>
+  filter(Year >= 1990, Year <= 2014)
 
-problem_solving_since_1987 <- ggplot(data = govt_control_since_1987, mapping = aes(x = year, y = mean_problem_solving_score)) + geom_point() + labs(x = "Year", y = "Score of Problem Solving Ability", title = "Can Americans Solve Our Own Problems?"  ) + geom_smooth()
-problem_solving_since_1987
+
 ```
-Analysis:
-
-This graph also supports my theory that there will be a significant decline in confidence in politicians/fellow Americans once the news sources became more partisan/polarizing. There is then a spike in the early 1990's which can likely be described by other political events occurring at that time. 
-
-
-
-
-
-Milestone 3:
-
-Here is a data visualization: 
 
 ```{r}
-officials_since_1987 <- division_data |>
-  group_by(year) |>
-  mutate(mean_officials_loose_touch = mean(q2b))
-
-plot_officials_since_1987 <- ggplot(data = officials_since_1987, mapping = aes(x = year, y = mean_officials_loose_touch)) + geom_point() + labs(x = "Year", y = "Rating (Higher rating = More aware of struggles", title = "Rating of Politician's Awareness of Stuggles in America"  ) + geom_smooth()
-plot_officials_since_1987
+data_prep1 <- data1 |>
+  group_by(Year)|>
+  mutate(
+    prop_liquid_to_total = (Liquid.Fuel + Gas.Fuel)/Total,
+    prop_solid_to_total = Solid.Fuel/Total    
+         ) 
 ```
-
-
 
 
 ```{r}
-officials_since_1987 <- division_data |>
-  group_by(year) |>
-  mutate(mean_officials_loose_touch = mean(q2b))
+viz1 <- data_prep1 |> 
+  group_by(Year) |>
+  summarize(
+    mean_prop_liquid = mean((prop_liquid_to_total))
+  )
 
-plot_officials_since_1987 <- ggplot(data = officials_since_1987, mapping = aes(x = year, y = mean_officials_loose_touch)) + geom_point() + labs(x = "Year", y = "Rating (Higher rating = More aware of struggles", title = "Rating of Politician's Awareness of Stuggles in America"  ) + geom_smooth()
-plot_officials_since_1987
+viz1 |> ggplot(mapping = aes(x = Year, y = mean_prop_liquid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1'))
+```
 
+```{r}
+viz2 <- data_prep1 |> 
+  group_by(Year) |>
+  summarize(
+    mean_prop_solid = mean((prop_solid_to_total))
+  )
 
+viz2 |> ggplot(mapping = aes(x = Year, y = mean_prop_solid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1'))
 
 ```
 
 
+```{r}
+viz3 <- data1 |> 
+  filter(Country == "UNITED STATES OF AMERICA") |>
+  group_by(Year) |>
+  summarize(
+    mean_prop_solid = mean((prop_solid_to_total))
+  )
+
+viz3 |> ggplot(mapping = aes(x = Year, y = mean_prop_solid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1'))
+
+```
 
 
+```{r}
+viz4 <- data1 |> 
+  filter(Country == "CHINA (MAINLAND)") |>
+  group_by(Year) |>
+  summarize(
+    mean_prop_solid = mean((prop_solid_to_total))
+  )
+
+viz4 |> ggplot(mapping = aes(x = Year, y = mean_prop_solid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1'))
+```
+
+```{r}
+
+viz5 <- data1 |> 
+  filter(Country == "UNITED STATES OF AMERICA") |>
+  group_by(Year) |>
+  summarize(
+    mean_prop_liquid = mean((prop_liquid_to_total))
+  )
+
+viz5 |> ggplot(mapping = aes(x = Year, y = mean_prop_liquid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1'))
+```
 
 
-Milestone 2: 
-I recently changed my research question. Now I will specifically be asking: How did the abandonment of the Fairness Doctrine in 1987 lead to overall division in America when it comes to trust in the government, trust in business, and equity. My hypothesis is that there will be less confidence in government and more overall anger about business and equity in the years following the removal of the Fairness Doctrine. I do think these ratings will likely vary due to political events but there likely will be a sharp change for most of these tests right after the Fairness Doctrine was removed as news channels quickly became more partisan. I will be looking at these approval ratings/confidence levels in the government to see how the views of Americans change since the news regulations changed.
+```{r}
+viz6 <- data1 |> 
+  filter(Country == "CHINA (MAINLAND)") |>
+  group_by(Year) |>
+  summarize(
+    mean_prop_liquid = mean((prop_liquid_to_total))
+  )
+
+viz6 |> ggplot(mapping = aes(x = Year, y = mean_prop_liquid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1'))
 
 
-
-
-
-
-
-
+```
 
 
 
