@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Emissions of Solid Fuels and Liquid Fuels From 1990 to 2014 -- US and China vs. World"
 author: "Nicholas Frumkin"
 description: "Gov 50: Final Project"
 output:
@@ -7,118 +7,136 @@ output:
     self_contained: false
 ---
 
-  
+
+                                   Introduction
+
+                                
+Although the transition to renewable energy sources is slowly progressing in a positive direction, we still rely heavily on releasing carbon into the atmosphere to generate electricity and power the world. We have discovered over the past few decades that burning coal and solid fuels is far more damaging to the environment and less efficient than using natural gases as the mass to burn to spin a turbine and generate power. But how has this revelation about the inefficiency of burning solid fuels compared to liquid fuels actually played out? In this brief study, I aim to use world emissions data broken down by type of fuel to answer the following two research questions:
+
+To what extent have the US and China shifted from solid fuels to liquid fuels over the past 24 years? 
+
+To answer this question, I will do the following:
+
+(1) I will look at the proportion of liquid fuel emissions to total emissions in the US and China.
+(2) I will look at the proportion of liquid fuel emissions to total emissions in the US and China.
+(3) I will run a regression comparing the rates at which the proportions of liquid fuel and solid fuel are changing.  
+
+My hypothesis is that the US has shifted away from solid fuels and towards liquid fuels at a faster rate than China. 
+
+
+                        
+                        
+
+                                  Data Wrangling
+
+First Step: Let's import the data.   
+                        
 ```{r}
 library(tidyverse)
 library("jsonlite")
-
 json_file <- 'https://datahub.io/core/co2-fossil-by-nation/datapackage.json'
 json_data <- fromJSON(paste(readLines(json_file), collapse=""))
-
-
-print(json_data$resources$name)
-
-
 for(i in 1:length(json_data$resources$datahub$type)){
   if(json_data$resources$datahub$type[i]=='derived/csv'){
     path_to_file = json_data$resources$path[i]
     data1 <- read.csv(url(path_to_file))
-    
-  }
-}
-
+  }}
 ```
 
-
-
+Second Step: Creating 2 new variables that express the proportion of the emissions from each fuel type to the total amount of emissions. 
 ```{r}
 data1 <- data1 |>
   filter(Year >= 1990, Year <= 2014)
 
 
+data_prep1 <- data1|>
+  filter(Country == "UNITED STATES OF AMERICA") |>
+  group_by(Year)|>
+  mutate(
+    Liquid_Fuel = mean(Liquid.Fuel + Gas.Fuel),
+    Solid_Fuel = mean(Solid.Fuel),
+    prop_liquid_to_total = (Liquid.Fuel + Gas.Fuel)/Total,
+    prop_solid_to_total = Solid.Fuel/Total    
+         )
+
+data_prep2 <- data1|>
+  filter(Country == "CHINA (MAINLAND)") |>
+  group_by(Year)|>
+  mutate(
+    Liquid_Fuel = mean(Liquid.Fuel + Gas.Fuel),
+    Solid_Fuel = mean(Solid.Fuel),
+    prop_liquid_to_total = (Liquid.Fuel + Gas.Fuel)/Total,
+    prop_solid_to_total = Solid.Fuel/Total    
+         )
+  
 ```
 
+                            
+                            
+                            
+                              Data Visualizations
+
+
+
 ```{r}
-data_prep1 <- data1 |>
-  group_by(Year)|>
+vizA <- data1 |> 
+  filter(Country == "UNITED STATES OF AMERICA" | Country == "CHINA (MAINLAND)") |>
+  group_by(Year, Country) |>
   mutate(
     prop_liquid_to_total = (Liquid.Fuel + Gas.Fuel)/Total,
     prop_solid_to_total = Solid.Fuel/Total    
-         ) 
+         ) |>
+  summarize(
+    mean_prop_solid = mean((prop_solid_to_total)),
+    which_country = Country
+  ) |>
+  ggplot(mapping = aes(x = Year, y = mean_prop_solid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1')) + facet_wrap(vars(which_country)) + labs(title = "Prop. of Emissions From Solid Fuel To Emissions From All Sources (1990-2014)", y = "proportion of solid fuel generated emissions to total emissions") 
+
+vizA
+
+
+```
+
+In the above graph, I compare the proportion of solid fuel generated emissions to total emissions in both countries. 
+
+
+```{r}
+vizB <- data1 |> 
+  filter(Country == "UNITED STATES OF AMERICA" | Country == "CHINA (MAINLAND)") |>
+  group_by(Year, Country) |>
+  mutate(
+    prop_liquid_to_total = (Liquid.Fuel + Gas.Fuel)/Total,
+    prop_solid_to_total = Solid.Fuel/Total    
+         ) |>
+  summarize(
+    mean_prop_liquid = mean((prop_liquid_to_total)),
+    which_country = Country
+  ) |>
+  ggplot(mapping = aes(x = Year, y = mean_prop_liquid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1')) + facet_wrap(vars(which_country))
+vizB
 ```
 
 
 ```{r}
-viz1 <- data_prep1 |> 
-  group_by(Year) |>
-  summarize(
-    mean_prop_liquid = mean((prop_liquid_to_total))
-  )
+fit_US<- lm(prop_liquid_to_total ~ prop_solid_to_total, data = data_prep1) |>
+  broom::tidy() |>
+  select(term, estimate) |>
+  knitr::kable(digits = 2)
+fit_US
 
-viz1 |> ggplot(mapping = aes(x = Year, y = mean_prop_liquid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1'))
-```
 
-```{r}
-viz2 <- data_prep1 |> 
-  group_by(Year) |>
-  summarize(
-    mean_prop_solid = mean((prop_solid_to_total))
-  )
-
-viz2 |> ggplot(mapping = aes(x = Year, y = mean_prop_solid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1'))
-
+fit_China <- lm(prop_liquid_to_total ~ prop_solid_to_total, data = data_prep2) |>
+  broom::tidy() |>
+  select(term, estimate) |>  
+  knitr::kable(digits = 2)
+fit_China
 ```
 
 
-```{r}
-viz3 <- data1 |> 
-  filter(Country == "UNITED STATES OF AMERICA") |>
-  group_by(Year) |>
-  summarize(
-    mean_prop_solid = mean((prop_solid_to_total))
-  )
-
-viz3 |> ggplot(mapping = aes(x = Year, y = mean_prop_solid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1'))
-
-```
 
 
-```{r}
-viz4 <- data1 |> 
-  filter(Country == "CHINA (MAINLAND)") |>
-  group_by(Year) |>
-  summarize(
-    mean_prop_solid = mean((prop_solid_to_total))
-  )
-
-viz4 |> ggplot(mapping = aes(x = Year, y = mean_prop_solid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1'))
-```
-
-```{r}
-
-viz5 <- data1 |> 
-  filter(Country == "UNITED STATES OF AMERICA") |>
-  group_by(Year) |>
-  summarize(
-    mean_prop_liquid = mean((prop_liquid_to_total))
-  )
-
-viz5 |> ggplot(mapping = aes(x = Year, y = mean_prop_liquid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1'))
-```
 
 
-```{r}
-viz6 <- data1 |> 
-  filter(Country == "CHINA (MAINLAND)") |>
-  group_by(Year) |>
-  summarize(
-    mean_prop_liquid = mean((prop_liquid_to_total))
-  )
-
-viz6 |> ggplot(mapping = aes(x = Year, y = mean_prop_liquid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1'))
-
-
-```
 
 
 
