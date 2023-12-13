@@ -1,5 +1,5 @@
 ---
-title: "Emissions of Solid Fuels and Liquid Fuels From 1990 to 2014 -- US and China vs. World"
+title: "Emissions of Solid Fuels and Liquid Fuels From 1990 to 2014 in the US and China"
 author: "Nicholas Frumkin"
 description: "Gov 50: Final Project"
 output:
@@ -11,7 +11,7 @@ output:
                                    Introduction
 
                                 
-Although the transition to renewable energy sources is slowly progressing in a positive direction, we still rely heavily on releasing carbon into the atmosphere to generate electricity and power the world. We have discovered over the past few decades that burning coal and solid fuels is far more damaging to the environment and less efficient than using natural gases as the mass to burn to spin a turbine and generate power. But how has this revelation about the inefficiency of burning solid fuels compared to liquid fuels actually played out? In this brief study, I aim to use world emissions data broken down by type of fuel to answer the following two research questions:
+Although the transition to renewable energy sources is slowly progressing in a positive direction, we still rely heavily on releasing carbon into the atmosphere to generate electricity and power the world. We have discovered over the past few decades that burning coal and solid fuels is far more damaging to the environment and less efficient than using natural gases as the mass to burn to spin a turbine and generate power. But how has this revelation about the inefficiency of burning solid fuels compared to liquid fuels actually played out in practice? In this brief study, I aim to use world emissions data broken down by type of fuel to answer the following two research questions:
 
 To what extent have the US and China shifted from solid fuels to liquid fuels over the past 24 years? 
 
@@ -21,7 +21,7 @@ To answer this question, I will do the following:
 (2) I will look at the proportion of liquid fuel emissions to total emissions in the US and China.
 (3) I will run a regression comparing the rates at which the proportions of liquid fuel and solid fuel are changing.  
 
-My hypothesis is that the US has shifted away from solid fuels and towards liquid fuels at a faster rate than China. 
+My hypothesis is that the US has shifted away from solid fuels and towards liquid fuels at a faster rate than China. I think these two countries offer an interesting insight into the transition to less destructive methods of generating energy. They have a wide range of different policies in place and approach energy generation in largely different ways. In this study, I look to discover what is actually happening in the transition from solid fuel to liquid fuel using the data of carbon emissions from each country. 
 
 
                         
@@ -43,12 +43,15 @@ for(i in 1:length(json_data$resources$datahub$type)){
   }}
 ```
 
+
 Second Step: Creating 2 new variables that express the proportion of the emissions from each fuel type to the total amount of emissions. 
+
+
 ```{r}
 data1 <- data1 |>
   filter(Year >= 1990, Year <= 2014)
 
-
+### These "data preps" will be used in the regression in the results section. ###
 data_prep1 <- data1|>
   filter(Country == "UNITED STATES OF AMERICA") |>
   group_by(Year)|>
@@ -58,7 +61,6 @@ data_prep1 <- data1|>
     prop_liquid_to_total = (Liquid.Fuel + Gas.Fuel)/Total,
     prop_solid_to_total = Solid.Fuel/Total    
          )
-
 data_prep2 <- data1|>
   filter(Country == "CHINA (MAINLAND)") |>
   group_by(Year)|>
@@ -68,14 +70,10 @@ data_prep2 <- data1|>
     prop_liquid_to_total = (Liquid.Fuel + Gas.Fuel)/Total,
     prop_solid_to_total = Solid.Fuel/Total    
          )
-  
 ```
 
                             
-                            
-                            
-                              Data Visualizations
-
+                                    Data Visualizations
 
 
 ```{r}
@@ -90,14 +88,11 @@ vizA <- data1 |>
     mean_prop_solid = mean((prop_solid_to_total)),
     which_country = Country
   ) |>
-  ggplot(mapping = aes(x = Year, y = mean_prop_solid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1')) + facet_wrap(vars(which_country)) + labs(title = "Prop. of Emissions From Solid Fuel To Emissions From All Sources (1990-2014)", y = "proportion of solid fuel generated emissions to total emissions") 
-
+  ggplot(mapping = aes(x = Year, y = mean_prop_solid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1')) + facet_wrap(vars(which_country)) + labs(title = "Prop. of Emissions From Solid Fuel To Emissions From All Sources", y = "prop. solid fuel generated emissions to total emissions") 
 vizA
-
-
 ```
 
-In the above graph, I compare the proportion of solid fuel generated emissions to total emissions in both countries. 
+In the above graph, I compare the proportion of solid fuel generated emissions to total emissions in both countries. First, we notice that China uses a significantly greater proportion of solid fuel for energy generation than the US. The US releases around 30 to 40 percent of its emissions from solid fuels while China releases around 70 to 80 percent solid fuels emissions. However, we are primarily interested in the proportional rate of change of the use of solid fuels. In other words, how does the proportion of solid fuel emissions change over time in each country? China's utilization of solid fuels goes down between 1990 and 2000, then increases slightly between 2000 and 2010, then begins to decrease after 2010. The US' proportion of solid fuel emissions to total emissions has remained relatively constant until roughly 2007 when is begins to decrease significantly. 
 
 
 ```{r}
@@ -112,29 +107,41 @@ vizB <- data1 |>
     mean_prop_liquid = mean((prop_liquid_to_total)),
     which_country = Country
   ) |>
-  ggplot(mapping = aes(x = Year, y = mean_prop_liquid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1')) + facet_wrap(vars(which_country))
+  ggplot(mapping = aes(x = Year, y = mean_prop_liquid)) + geom_point() + geom_smooth(color = "white")  + theme(panel.background = element_rect(fill = 'steelblue1')) + facet_wrap(vars(which_country)) + labs(title = "Prop. of Emissions From Liquid Fuel To Emissions From All Sources", y = "prop. liquid fuel generated emissions to total emissions") 
 vizB
 ```
+In the above graph, we can view the proportion of emissions from liquid fuels to total emissions. On the surface, we see that the US utilizes far more liquid fuel than China does in energy generation. The US' emissions from liquid fuels makes up around 60 to 70 percent of total emissions whereas China's emissions from liquid fuel only make up around 10 to 20 percent of total emissions. However, were are mainly focused on the change of these proportions over time. How quickly have each these countries shifted towards using more of the highly efficient liquid fuels? When it comes to China, we see a gradual increase in usage of liquid fuel until around 2000 and then a recession of this usage after 2000. In the US, we see a constant rate of usage from 1990 to 2005 and then a steady increase from 2005 to 2014. 
 
+                                      Results
+  
+      United States
 
 ```{r}
 fit_US<- lm(prop_liquid_to_total ~ prop_solid_to_total, data = data_prep1) |>
   broom::tidy() |>
-  select(term, estimate) |>
+  select(term, estimate, p.value) |>
   knitr::kable(digits = 2)
 fit_US
+```
 
+      China
 
+```{r}
 fit_China <- lm(prop_liquid_to_total ~ prop_solid_to_total, data = data_prep2) |>
   broom::tidy() |>
-  select(term, estimate) |>  
+  select(term, estimate, p.value) |>  
   knitr::kable(digits = 2)
 fit_China
 ```
 
+In the above regression, we can view the comparison between the rate of change of liquid fuel usage and the rate of change of solid fuel usage. The first regression covers the US and the second covers China. When it comes to the US, we observe an y-axis intercept of 0.99 and a coefficient for the "x" variable (proportion solid fuel usage) of -0.48. Now what does this mean? The intercept shoes us that when the proportion of usage of solid fuels is 0 (aka when coal burning is eliminated), the proportion of liquid fuel would be 0.99. This show us that the US trends heavily towards the elimination of solid fuels. The coefficient of -0.99 essentially represents the  slope of this change. This coefficient also suggest that the US is adopting liquid fuels and abandoning solid fuels rapidly as this is an inverse relationship between solid fuel proportion growth and liquid fuel proportion growth.  
+
+When it comes to the China, we observe an y-axis intercept of 0.53 and a coefficient for the "x" variable (proportion solid fuel usage) of -0.99. What does this mean for China's fuel usage? The intercept shoes us that when the proportion of usage of solid fuels is 0 (aka when coal burning is eliminated), the proportion of liquid fuel would be 0.53. This projects a less clear transition to liquid fuels. While it does signify China is working towards removing solid fuels and replacing them with natural gas, it is at a far slower projected rate than the US. The coefficient of -0.48 essentially represents the slope of this change. This coefficient signifies that China is in fact adopting liquid fuels and abandoning solid fuel as this is an inverse relationship between solid fuel proportion growth and liquid fuel proportion growth. However, this slope is nearly half as steep as the US. In other words, the transition to liquid fuels and away from solid fuels, according to this regression, is around two times more intense and quicker in the US than in China. In both of these regressions, I observed p-values of 0 across the board. This suggest that the findings in the relationships between the two proportions are significant and not observed in randomization. 
 
 
-
+                                      Conclusion
+                                    
+The conclusion that I reached in this study looking into the transition away from solid fuels and towards liquid fuels is that the US seems to be adopting the more efficient liquid fuels and abandoning the inefficient solid fuels more rapidly than China. This conclusion does not cover, however, any confounding variables that would impact these usage rates of the different fuel types. For example, long term transitions to renewable and the abandonment of solid and liquid fuels is in the works in both countries. These efforts towards the ultimate form of energy generation could be adding to the pollution rates in the short term but have massive pay-offs in the long term. This conclusion also relies on accurate emissions data gathering from both countries which is highly difficult and certain other sources of pollution could be excluded. In future studies, it would be interesting to view the rate of sustainable energy adoption in comparison with these rates to see who is performing better in renewable energy usage. I think this could offer an improvement to the current study as it would add more nuance and give countries more credit for investing in green tech and renewable energy development.                                     
 
 
 
